@@ -21,4 +21,9 @@ public class QnA {
 
     @Column
     private String question;
+
+    public QnA(String question, String answer) {
+        this.answer = answer;
+        this.question = question;
+    }
 }

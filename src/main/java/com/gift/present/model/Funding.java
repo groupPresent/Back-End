@@ -17,6 +17,9 @@ public class Funding extends Timestamped {
     private Long id;
 
     @Column
+    private Long userId;
+
+    @Column
     private String giftName;
 
     @Column
@@ -27,4 +30,8 @@ public class Funding extends Timestamped {
 
     @Column
     private int fundingPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Anniversary anniversary;
 }
