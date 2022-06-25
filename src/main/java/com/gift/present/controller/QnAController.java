@@ -26,7 +26,6 @@ public class QnAController {
     // 질문 작성 API (운영진용)
     @PostMapping("/makequestion")
     public void createQnA(@RequestBody QnADetailDto qnADetailDto) {
-        System.out.println(qnADetailDto.getTitle());
         qnAService.createQnA(qnADetailDto);
     }
 }

@@ -34,4 +34,12 @@ public class Funding extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Anniversary anniversary;
+
+    public Funding(Long userId, String giftName, String giftPhoto, int giftPrice, int fundingPrice) {
+        this.userId = userId;
+        this.giftName = giftName;
+        this.giftPhoto = giftPhoto;
+        this.giftPrice = giftPrice;
+        this.fundingPrice = fundingPrice;
+    }
 }

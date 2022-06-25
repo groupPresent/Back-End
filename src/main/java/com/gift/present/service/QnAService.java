@@ -28,7 +28,6 @@ public class QnAService {
 
     // 질문 작성
     public void createQnA(QnADetailDto qnADetailDto) {
-        System.out.println(qnADetailDto.getTitle());
         QnA qnA = new QnA(qnADetailDto.getTitle(), qnADetailDto.getContent());
         qnARepository.save(qnA);
     }
