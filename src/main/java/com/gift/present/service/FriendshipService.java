@@ -1,17 +1,17 @@
 package com.gift.present.service;
 
-import com.gift.present.dto.friendshipdto.FriendshipDetailDto;
-import com.gift.present.dto.friendshipdto.FriendshipDto;
-import com.gift.present.dto.qnAdto.QnADto;
-import com.gift.present.model.Friendship;
-import com.gift.present.model.QnA;
-import com.gift.present.repository.FriendshipRepository;
-import com.gift.present.repository.QnARepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.gift.present.dto.friendshipdto.FriendshipDto;
+import com.gift.present.dto.friendshipdto.FriendshipFundingDto;
+import com.gift.present.dto.friendshipdto.FriendshipInfoDto;
+import com.gift.present.model.Friendship;
+import com.gift.present.repository.FriendshipRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -63,13 +63,12 @@ public class FriendshipService {
 	}
 
 
-	public List<FriendshipDto> searchFriendInfo(String friendId) {
-		// TODO Auto-generated method stub
+	public List<FriendshipInfoDto> searchFriendInfo(String friendId) {
 		return null;
 	}
 
 
-	public List<FriendshipDto> searchFriendFundingInfo(String friendId) {
+	public List<FriendshipFundingDto> searchFriendFundingInfo(String friendId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
