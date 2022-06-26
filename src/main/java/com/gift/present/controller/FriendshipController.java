@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gift.present.dto.friendshipdto.FriendshipDto;
+import com.gift.present.dto.friendshipdto.FriendshipFundingDto;
+import com.gift.present.dto.friendshipdto.FriendshipInfoDto;
 import com.gift.present.service.FriendshipService;
 
 import lombok.RequiredArgsConstructor;
@@ -41,13 +43,13 @@ public class FriendshipController {
     
     // 친구정보 조회 (친구 마이페이지 접속 시)
     @GetMapping("/user/friend/{friendId}/info")
-    public ResponseEntity<List<FriendshipDto>> searchFriendInfo(@RequestParam String friendId) {
+    public ResponseEntity<List<FriendshipInfoDto>> searchFriendInfo(@RequestParam String friendId) {
         return ResponseEntity.ok().body(friendshipService.searchFriendInfo(friendId));
     }
 
     // 친구 펀딩정보 조회 (친구 마이페이지 접속 시)
     @GetMapping("/user/frined/{friendId}/funding")
-    public ResponseEntity<List<FriendshipDto>> searchFriendFundingInfo(@RequestParam String friendId) {
+    public ResponseEntity<List<FriendshipFundingDto>> searchFriendFundingInfo(@RequestParam String friendId) {
         return ResponseEntity.ok().body(friendshipService.searchFriendFundingInfo(friendId));
     }
     
