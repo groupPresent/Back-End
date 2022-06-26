@@ -13,21 +13,28 @@ import org.springframework.web.multipart.MultipartFile;
 public class FundingController {
     private final FundingService fundingService;
 
-    // 펀딩세부페이지-조회
-    @GetMapping("/user/friend/{friendId}/gift/{giftId}")
-    public ResponseEntity<FundingDetailResponseDto> getFundingDetail(@PathVariable Long friendId, @PathVariable Long giftId) {
-        return ResponseEntity.ok().body(fundingService.getFundingDetail(friendId, giftId));
+    // 펀딩세부페이지 - 조회
+    @GetMapping("/user/funding/{fundingId}")
+    public ResponseEntity<FundingDetailResponseDto> getFundingDetail(@PathVariable Long fundingId) {
+        return ResponseEntity.ok().body(fundingService.getFundingDetail(fundingId));
     }
 
-    // 펀딩받고싶은선물페이지-작성
-    @PostMapping("/user/{userId}/funding")
-    public void createFunding(@PathVariable Long userId,
-                              @RequestPart(value = "giftPhoto", required = false) MultipartFile giftPhoto,
+    // 펀딩받고싶은선물페이지 - 작성
+    @PostMapping("/user/funding")
+    public void createFunding(@RequestPart(value = "giftPhoto", required = false) MultipartFile giftPhoto,
                               @RequestPart(value = "fundingRequestDto", required = false) FundingRequestDto fundingRequestDto
                               ) {
-
-        fundingService.createFunding(userId, giftPhoto, fundingRequestDto);
+        // User
+        fundingService.createFunding(giftPhoto, fundingRequestDto);
     }
 
-
+    // 펀딩받고싶은선물페이지 - 수정
+    @PutMapping("/user/funding/{fundingId}")
+    public void editFunding(@RequestPart(value = "giftPhoto", required = false) MultipartFile giftPhoto,
+                            @RequestPart(value = "fundingRequestDto", required = false) FundingRequestDto fundingRequestDto,
+                            @PathVariable Long fundingId
+                            ) {
+        // User
+        fundingService.editFunding(giftPhoto, fundingRequestDto, fundingId);
+    }
 }

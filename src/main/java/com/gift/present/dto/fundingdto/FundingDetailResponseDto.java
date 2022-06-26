@@ -17,9 +17,10 @@ public class FundingDetailResponseDto {
     private String giftName;
     private String giftPhoto;
     private String giftFundingRate;
+    private int currentFundraisingPrice;
     private int giftFundingPrice;
-    private List<DonatorDto> donatorList;
-    private int donatorNum;
+    private List<ContributorDto> contributorList;
+    private int contributorNum;
     private List<FundingCommentResponseDto> commentList;
     private int commentNum;
 }

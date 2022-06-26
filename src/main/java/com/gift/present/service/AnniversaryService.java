@@ -18,7 +18,6 @@ public class AnniversaryService {
     // 기념일 등록 메소드
     @Transactional
     public void createAnniversary(AnniversaryRequestDto anniversaryRequestDto) {
-        //public User(String userName, String profileImg, String birthDay, String password, String accountNum, String gender) {
         User user = userRepository.findById(1L).orElseThrow(
                 () -> new IllegalArgumentException("찾는 유저가 없어요")
         );

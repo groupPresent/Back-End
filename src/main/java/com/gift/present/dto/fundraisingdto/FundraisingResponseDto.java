@@ -1,4 +1,4 @@
-package com.gift.present.dto.fundingdto;
+package com.gift.present.dto.fundraisingdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FundingRequestDto {
+public class FundraisingResponseDto {
+    private String giftPhoto;
     private String giftName;
     private int giftPrice;
-    private String date;
+    private String giftFundingRate;
+    private int giftFundingPrice;
+    private String dDay;
 }
