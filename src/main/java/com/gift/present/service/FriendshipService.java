@@ -1,5 +1,6 @@
 package com.gift.present.service;
 
+import com.gift.present.dto.friendshipdto.FriendshipDetailDto;
 import com.gift.present.dto.friendshipdto.FriendshipDto;
 import com.gift.present.dto.qnAdto.QnADto;
 import com.gift.present.model.Friendship;
@@ -18,15 +19,7 @@ public class FriendshipService {
 
     private final FriendshipRepository friendshipRepository;
 
-    public List<FriendshipDto> getAllFriendship() {
-        List<FriendshipDto> friendshipDtoList = new ArrayList<>();
-
-        List<Friendship> friendshipList = friendshipRepository.findAll();
-        for(Friendship friendship : friendshipList) {
-            friendshipDtoList.add(generateFriendshipDto(friendship));
-        }
-        return friendshipDtoList;
-    }
+    
 
 
     // QnA의 Dto 변환 과정
@@ -37,5 +30,57 @@ public class FriendshipService {
                 .photoUrl("www~")
                 .build();
     }
+
+
+	public void insertFriend(String friendId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public List<FriendshipDto> searchAllFriends() {
+		List<FriendshipDto> friendshipDtoList = new ArrayList<>();
+
+        List<Friendship> friendshipList = friendshipRepository.findAll();
+        for(Friendship friendship : friendshipList) {
+            friendshipDtoList.add(generateFriendshipDto(friendship));
+        }
+        return friendshipDtoList;
+
+	}
+	
+	
+
+
+	public List<FriendshipDto> searchFriend(String friendName) {
+		List<FriendshipDto> friendshipDtoList = new ArrayList<>();
+
+        List<Friendship> friendshipList = friendshipRepository.findAll();
+        for(Friendship friendship : friendshipList) {
+            friendshipDtoList.add(generateFriendshipDto(friendship));
+        }
+        return friendshipDtoList;
+	}
+
+
+	public List<FriendshipDto> searchFriendInfo(String friendId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public List<FriendshipDto> searchFriendFundingInfo(String friendId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public void updateFriendFavorite(String friendId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	
 
 }
