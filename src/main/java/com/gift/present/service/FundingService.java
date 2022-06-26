@@ -3,6 +3,7 @@ package com.gift.present.service;
 import com.gift.present.dto.fundingdto.ContributorDto;
 import com.gift.present.dto.fundingdto.FundingDetailResponseDto;
 import com.gift.present.dto.fundingdto.FundingRequestDto;
+import com.gift.present.dto.fundingdto.FundingResponseDto;
 import com.gift.present.model.Anniversary;
 import com.gift.present.model.Funding;
 import com.gift.present.model.Fundraising;
@@ -55,6 +56,21 @@ public class FundingService {
         funding.update(fundingRequestDto, anniversary);
     }
 
+    // 받은펀딩 목록 조회 메소드
+    public List<FundingResponseDto> getAllFundingList() {
+        List<FundingResponseDto> fundingResponseDtoList = new ArrayList<>();
+        List<Funding> fundingList = fundingRepository.findAllByUserId(1L);
+        for(Funding funding : fundingList) {
+            List<Fundraising> fundraisingList = fundraisingRepository.findAllByFunding_Id(funding.getId());
+            int giftFundingPrice = 0;
+            for(Fundraising fundraising : fundraisingList) {
+                giftFundingPrice += fundraising.getMoney();
+            }
+            fundingResponseDtoList.add(generateFundingResponseDto(funding, giftFundingPrice));
+        }
+        return fundingResponseDtoList;
+    }
+
 
     // 펀딩 세부페이지 Dto 생성 메소드
     public FundingDetailResponseDto generateFundingDetailResponseDto(Funding funding, List<Fundraising> fundraisingList) {
@@ -88,4 +104,15 @@ public class FundingService {
                 .build();
     }
 
+    // FundingResponseDto 생성 메소드
+    public FundingResponseDto generateFundingResponseDto(Funding funding, int giftFundingPrice) {
+        return FundingResponseDto.builder()
+                .giftPhoto(funding.getGiftPhoto())
+                .giftName(funding.getGiftName())
+                .giftPrice(funding.getGiftPrice())
+                .giftFundingRate(giftFundingPrice / funding.getGiftPrice() * 100 + "%")
+                .giftFundingPrice(giftFundingPrice)
+                .anniversaryRemains("D-5")
+                .build();
+    }
 }

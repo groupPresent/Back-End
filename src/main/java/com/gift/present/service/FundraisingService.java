@@ -55,7 +55,7 @@ public class FundraisingService {
                 .giftPrice(fundraising.getFunding().getGiftPrice())
                 .giftFundingRate(fundraising.getMoney()/fundraising.getFunding().getGiftPrice()*100 + "%")
                 .giftFundingPrice(fundraising.getMoney())
-                .dDay(fundraising.getFunding().getAnniversary().getAnniversaryDate())
+                .anniversaryRemains(fundraising.getFunding().getAnniversary().getAnniversaryDate())
                 .build();
     }
 }

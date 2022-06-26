@@ -2,11 +2,15 @@ package com.gift.present.controller;
 
 import com.gift.present.dto.fundingdto.FundingDetailResponseDto;
 import com.gift.present.dto.fundingdto.FundingRequestDto;
+import com.gift.present.dto.fundingdto.FundingResponseDto;
+import com.gift.present.model.Funding;
 import com.gift.present.service.FundingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,5 +40,12 @@ public class FundingController {
                             ) {
         // User
         fundingService.editFunding(giftPhoto, fundingRequestDto, fundingId);
+    }
+
+    // 마이페이지 - 받은펀딩 목록조회
+    @GetMapping("/user/funding")
+    public ResponseEntity<List<FundingResponseDto>> getAllFundingList() {
+        // User
+        return ResponseEntity.ok().body(fundingService.getAllFundingList());
     }
 }

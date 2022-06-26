@@ -23,7 +23,7 @@ public class FundraisingController {
     }
 
     // 프로필 보기 - 내가 준 모금 목록 조회하기
-    @GetMapping("/user/give")
+    @GetMapping("/user/fundraising")
     public ResponseEntity<List<FundraisingResponseDto>> getAllFundraising() {
         // User
         return ResponseEntity.ok().body(fundraisingService.getAllFundraising());

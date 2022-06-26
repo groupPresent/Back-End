@@ -4,6 +4,9 @@ import com.gift.present.model.Anniversary;
 import com.gift.present.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface AnniversaryRepository extends JpaRepository<Anniversary, Long> {
     Anniversary findByAnniversaryDateAndUser_Id(String anniversaryDate, Long userId);
+    List<Anniversary> findAllByUser_Id(Long userId);
 }
