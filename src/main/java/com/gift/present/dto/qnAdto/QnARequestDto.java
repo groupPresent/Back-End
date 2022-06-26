@@ -1,6 +1,5 @@
 package com.gift.present.dto.qnAdto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QnADto {
+public class QnARequestDto {
     private String question;
-    private int viewCnt;
+    private String answer;
 }
