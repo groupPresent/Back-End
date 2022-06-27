@@ -1,13 +1,15 @@
 package com.gift.present.controller;
 
+
 import java.util.List;
 
+import com.gift.present.dto.friendshipdto.FriendshipDetailDto;
+import com.gift.present.dto.userdto.UserDto;
+import com.gift.present.service.UserService;
+import org.springframework.data.web.JsonPath;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 import com.gift.present.dto.friendshipdto.FriendshipDto;
 import com.gift.present.dto.friendshipdto.FriendshipFundingDto;
@@ -20,45 +22,43 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FriendshipController {
     private final FriendshipService friendshipService;
+
     
     
-    //친구추가
+    //친구추가 -다시  400 오류
     @PostMapping("/user/friend/{friendId}")
-    public void insertFriend(@RequestParam String friendId) {
+    public void insertFriend(@PathVariable Long friendId) {
     	 friendshipService.insertFriend(friendId);
     }
     
     //전체 친구목록 조회
     @GetMapping("/user/friend")
-    public ResponseEntity<List<FriendshipDto>> searchAllFriends() {
-    	return ResponseEntity.ok().body(friendshipService.searchAllFriends());
+    public ResponseEntity<List<FriendshipDto>> getAllFriendship() {
+    	return ResponseEntity.ok().body(friendshipService.getFriendships());
     }
     
 
     // 친구검색
     @GetMapping("/user/friend/{friendName}")
-    public ResponseEntity<List<FriendshipDto>> searchFriend(@RequestParam String friendName) {
+    public ResponseEntity<List<FriendshipDto>> searchFriend(@PathVariable String friendName) {
         return ResponseEntity.ok().body(friendshipService.searchFriend(friendName));
     }
     
     // 친구정보 조회 (친구 마이페이지 접속 시)
     @GetMapping("/user/friend/{friendId}/info")
-    public ResponseEntity<List<FriendshipInfoDto>> searchFriendInfo(@RequestParam String friendId) {
-        return ResponseEntity.ok().body(friendshipService.searchFriendInfo(friendId));
+    public ResponseEntity<UserDto> getFriendInfo(@PathVariable Long friendId) {
+        return ResponseEntity.ok().body(friendshipService.getFriendInfo(friendId));
     }
 
     // 친구 펀딩정보 조회 (친구 마이페이지 접속 시)
     @GetMapping("/user/frined/{friendId}/funding")
-    public ResponseEntity<List<FriendshipFundingDto>> searchFriendFundingInfo(@RequestParam String friendId) {
+    public ResponseEntity<List<FriendshipFundingDto>> searchFriendFundingInfo(@PathVariable Long friendId) {
         return ResponseEntity.ok().body(friendshipService.searchFriendFundingInfo(friendId));
     }
     
     // 친구 즐겨찾기 등록/취소
     @PutMapping("/user/friend/{friendId}/favorite")
-    public void updateFriendFavorite(@RequestParam String friendId) {
+    public void updateFriendFavorite(@PathVariable Long friendId) {
     	friendshipService.updateFriendFavorite(friendId);
     }
-    
-    
-    
 }

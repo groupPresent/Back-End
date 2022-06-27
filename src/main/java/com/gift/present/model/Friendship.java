@@ -23,7 +23,16 @@ public class Friendship {
     @Column
     private Long friendId;
 
+
     @Column
     private Boolean favorites;
+
+    public Friendship(User user, Long friendId){
+        this.user = user;
+        this.friendId = friendId;
+        this.favorites = false;
+    }
+
+
 
 }
