@@ -27,15 +27,19 @@ public class Reviews extends Timestamped {
     @Column
     private String reviewPhoto;
 
+    @Column
+    private int reviewPrice;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private User user;
 
-    public Reviews(String reviewTitle, String reviewContent, int reviewStar, String reviewPhoto) {
+    public Reviews(String reviewTitle, String reviewContent, int reviewStar, String reviewPhoto, int reviewPrice) {
         this.reviewTitle = reviewTitle;
         this.reviewContent = reviewContent;
         this.reviewStar = reviewStar;
         this.reviewPhoto = reviewPhoto;
+        this.reviewPrice = reviewPrice;
 
     }
 

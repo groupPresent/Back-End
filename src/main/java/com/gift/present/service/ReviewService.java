@@ -32,12 +32,13 @@ public class ReviewService {
                 .reviewContent(reviews.getReviewContent())
                 .reviewStar(reviews.getReviewStar())
                 .reviewPhoto(reviews.getReviewPhoto())
+                .reviewPrice(reviews.getReviewPrice())
                 .build();
     }
 
     public void WriteReview(ReviewDto reviewDto) {
          Reviews review = new Reviews(reviewDto.getReviewTitle(), reviewDto.getReviewContent(),
-                reviewDto.getReviewStar(), reviewDto.getReviewPhoto());
+                reviewDto.getReviewStar(), reviewDto.getReviewPhoto(), reviewDto.getReviewPrice());
                 reviewsRepository.save(review);
 
     }
