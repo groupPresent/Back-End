@@ -11,16 +11,20 @@ import com.gift.present.model.Funding;
 import com.gift.present.model.User;
 import com.gift.present.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gift.present.dto.friendshipdto.FriendshipDto;
 import com.gift.present.dto.friendshipdto.FriendshipFundingDto;
 import com.gift.present.dto.friendshipdto.FriendshipInfoDto;
+import com.gift.present.model.Anniversary;
 import com.gift.present.model.Friendship;
+import com.gift.present.model.Funding;
+import com.gift.present.repository.AnniversaryRepository;
 import com.gift.present.repository.FriendshipRepository;
+import com.gift.present.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +54,7 @@ public class FriendshipService {
 				.accountNum(friend.getAccountNum())
 				.gender(friend.getGender())
 				.build();
+
 	}
 
 
@@ -111,11 +116,15 @@ public class FriendshipService {
 	}
 
 
+
 	//친구 즐겨찾기 등록/취소
 	public void updateFriendFavorite(Long friendId) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+
 
 
 	
