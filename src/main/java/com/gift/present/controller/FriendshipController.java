@@ -24,7 +24,7 @@ public class FriendshipController {
     
     //친구추가
     @PostMapping("/user/friend/{friendId}")
-    public void insertFriend(@RequestParam String friendId) {
+    public void insertFriend(@RequestParam Long friendId) {
     	 friendshipService.insertFriend(friendId);
     }
     
@@ -43,19 +43,19 @@ public class FriendshipController {
     
     // 친구정보 조회 (친구 마이페이지 접속 시)
     @GetMapping("/user/friend/{friendId}/info")
-    public ResponseEntity<List<FriendshipInfoDto>> searchFriendInfo(@RequestParam String friendId) {
+    public ResponseEntity<List<FriendshipInfoDto>> searchFriendInfo(@RequestParam Long friendId) {
         return ResponseEntity.ok().body(friendshipService.searchFriendInfo(friendId));
     }
 
     // 친구 펀딩정보 조회 (친구 마이페이지 접속 시)
     @GetMapping("/user/frined/{friendId}/funding")
-    public ResponseEntity<List<FriendshipFundingDto>> searchFriendFundingInfo(@RequestParam String friendId) {
+    public ResponseEntity<List<FriendshipFundingDto>> searchFriendFundingInfo(@RequestParam Long friendId) {
         return ResponseEntity.ok().body(friendshipService.searchFriendFundingInfo(friendId));
     }
     
     // 친구 즐겨찾기 등록/취소
     @PutMapping("/user/friend/{friendId}/favorite")
-    public void updateFriendFavorite(@RequestParam String friendId) {
+    public void updateFriendFavorite(@RequestParam Long friendId) {
     	friendshipService.updateFriendFavorite(friendId);
     }
     

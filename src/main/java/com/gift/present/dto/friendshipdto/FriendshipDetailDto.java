@@ -13,4 +13,5 @@ public class FriendshipDetailDto {
     private String friendId;
     private String friendName;
     private String photoUrl;
+    private String date;
 }
