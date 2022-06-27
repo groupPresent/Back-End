@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+//친구 상세정보
 @Builder
 @Getter
 @AllArgsConstructor

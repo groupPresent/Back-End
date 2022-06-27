@@ -1,6 +1,7 @@
 package com.gift.present.service;
 
 import com.gift.present.dto.anniversarydto.AnniversaryInfoDto;
+import com.gift.present.dto.userdto.UserDto;
 import com.gift.present.dto.userdto.UserInfoResponseDto;
 import com.gift.present.model.Anniversary;
 import com.gift.present.model.User;
@@ -41,6 +42,41 @@ public class UserService {
             anniversaryInfoDtoList.add(generateAnniversaryInfoDto(anniversary));
         }
         return generateUserInfoResponseDto(user, anniversaryInfoDtoList);
+    }
+
+    //내계정정보 리턴 (미림)
+    public UserDto getCurrentUser() {
+        User user = userRepository.findById(1L).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
+        );
+        return generateUserDto(user);
+    }
+
+    public UserDto getUser(Long id) {
+        //주석 처리된 코드가 원래코드 현재는 친구유저가 생성이 안되어 있기 때문에 주석처리하고 내정보호출
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
+        );
+        //1번유저정보호출(최초에 가상유저생성한것)
+//        User user = userRepository.findById(1L).orElseThrow(
+//                () -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
+//        );
+        return generateUserDto(user);
+    }
+
+    public List<UserDto> searchUserByName(String userName){
+        return userRepository.findAllByUserName(userName);
+    }
+
+    private UserDto generateUserDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .userName(user.getUserName())
+                .profileImg(user.getProfileImg())
+                .birthDay(user.getBirthDay())
+                .accountNum(user.getAccountNum())
+                .gender(user.getGender())
+                .build();
     }
 
     // 유저 탈퇴하기

@@ -71,6 +71,20 @@ public class FundingService {
         return fundingResponseDtoList;
     }
 
+    public List<FundingResponseDto> getUserFundingList(Long friendId) {
+        List<FundingResponseDto> userFundingDtoList = new ArrayList<>();
+        List<Funding> userFundingList = fundingRepository.findAllByUserId(friendId);
+        for(Funding userFunding : userFundingList) {
+            List<Fundraising> fundraisingList = fundraisingRepository.findAllByFunding_Id(userFunding.getId());
+            int giftFundingPrice = 0;
+            for(Fundraising fundraising : fundraisingList) {
+                giftFundingPrice += fundraising.getMoney();
+            }
+            userFundingDtoList.add(generateFundingResponseDto(userFunding, giftFundingPrice));
+        }
+        return userFundingDtoList;
+    }
+
 
     // 펀딩 세부페이지 Dto 생성 메소드
     public FundingDetailResponseDto generateFundingDetailResponseDto(Funding funding, List<Fundraising> fundraisingList) {
@@ -115,4 +129,6 @@ public class FundingService {
                 .anniversaryRemains("D-5")
                 .build();
     }
+
+
 }
