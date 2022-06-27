@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import com.gift.present.dto.friendshipdto.FriendshipDetailDto;
+import com.gift.present.dto.fundingdto.FundingResponseDto;
 import com.gift.present.dto.userdto.UserDto;
 import com.gift.present.model.Funding;
 import com.gift.present.model.User;
@@ -33,6 +34,7 @@ public class FriendshipService {
 
     private final FriendshipRepository friendshipRepository;
 	private final UserService userService;
+	private final FundingService fundingService;
     
 
 
@@ -94,10 +96,14 @@ public class FriendshipService {
 		//friendName 과 동일한 이름을 가진 모든 사람 조회
 		List<UserDto> userList = userService.searchUserByName(friendName);
 		for(UserDto tempUser : userList) {
-			Friendship friendship = friendshipRepository.findByUser_IdAndFriendId(user.getId(),tempUser.getId());
-			if(friendship != null){
-				friendshipDtoList.add(generateFriendshipDto(friendship));
+			List<Friendship> friendshipList = friendshipRepository.findAllByUser_IdAndFriendId(user.getId(),tempUser.getId());
+			for(Friendship friendship : friendshipList){
+				if(friendship != null){
+					friendshipDtoList.add(generateFriendshipDto(friendship));
+				}
+				break;
 			}
+
 		}
 
         return friendshipDtoList;
@@ -111,16 +117,24 @@ public class FriendshipService {
 
 
 	//친구 마이페이지 - 받은 편딩 조회
-	public List<FriendshipFundingDto> searchFriendFundingInfo(Long friendId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<FundingResponseDto> searchFriendFundingInfo(Long friendId) {
+		return fundingService.getUserFundingList(friendId);
 	}
 
 
 
 	//친구 즐겨찾기 등록/취소
 	public void updateFriendFavorite(Long friendId) {
-		// TODO Auto-generated method stub
+		UserDto userDto = userService.getCurrentUser();
+		User user = new User(userDto.getId(),userDto.getUserName(), userDto.getProfileImg(), userDto.getBirthDay(), userDto.getPassword(), userDto.getAccountNum(),userDto.getGender());
+		List<Friendship> friendshipList = friendshipRepository.findAllByUser_IdAndFriendId(user.getId(),friendId);
+		for(Friendship friendship : friendshipList){
+			friendship.setFavorites(!friendship.getFavorites());
+			friendshipRepository.save(friendship);
+			break;
+		}
+
+
 		
 	}
 	

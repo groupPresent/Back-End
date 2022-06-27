@@ -15,11 +15,13 @@ import com.gift.present.time.Timestamped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class Friendship extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

@@ -4,6 +4,7 @@ package com.gift.present.controller;
 import java.util.List;
 
 import com.gift.present.dto.friendshipdto.FriendshipDetailDto;
+import com.gift.present.dto.fundingdto.FundingResponseDto;
 import com.gift.present.dto.userdto.UserDto;
 import com.gift.present.service.UserService;
 import org.springframework.data.web.JsonPath;
@@ -52,7 +53,7 @@ public class FriendshipController {
 
     // 친구 펀딩정보 조회 (친구 마이페이지 접속 시)
     @GetMapping("/user/frined/{friendId}/funding")
-    public ResponseEntity<List<FriendshipFundingDto>> searchFriendFundingInfo(@PathVariable Long friendId) {
+    public ResponseEntity<List<FundingResponseDto>> searchFriendFundingInfo(@PathVariable Long friendId) {
         return ResponseEntity.ok().body(friendshipService.searchFriendFundingInfo(friendId));
     }
     
