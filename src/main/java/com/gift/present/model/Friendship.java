@@ -35,31 +35,6 @@ public class Friendship extends Timestamped {
 
     @Column
     private Boolean favorites;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    private Anniversary anniversary;
-    
-    public Friendship(User user, Long friendId, Boolean favorites, Anniversary anniversary) {
-		this.user = user;
-		this.friendId = friendId;
-		this.favorites = favorites;
-		this.anniversary = anniversary;
-	}
-
-    public void update(Long friendId,Anniversary anniversary) {
-        this.friendId = friendId;
-        if(this.favorites == true) {
-        	this.favorites = false;
-        }
-        else {
-        	this.favorites = true;
-        }
-        this.anniversary = anniversary;
-    }
-
-
-
 	
 
     public Friendship(User user, Long friendId){

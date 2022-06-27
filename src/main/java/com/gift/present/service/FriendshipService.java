@@ -4,6 +4,7 @@ package com.gift.present.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import com.gift.present.dto.friendshipdto.FriendshipDetailDto;
 import com.gift.present.dto.userdto.UserDto;
@@ -39,8 +40,8 @@ public class FriendshipService {
     public FriendshipDto generateFriendshipDto(Friendship friendship) {
         return FriendshipDto.builder()
                 .friendId(friendship.getFriendId())
-                .photoUrl(userService.getUser(friendship.getId()).getProfileImg())
-				.friendName(userService.getUser(friendship.getId()).getUserName())
+                .photoUrl(userService.getUser(friendship.getFriendId()).getProfileImg())
+				.friendName(userService.getUser(friendship.getFriendId()).getUserName())
 				.favorites(friendship.getFavorites())
                 .build();
     }
