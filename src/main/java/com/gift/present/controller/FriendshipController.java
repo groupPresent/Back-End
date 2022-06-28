@@ -4,8 +4,8 @@ package com.gift.present.controller;
 import java.util.List;
 
 
+import com.gift.present.dto.friendshipdto.FriendDto;
 import com.gift.present.dto.fundingdto.FundingResponseDto;
-import com.gift.present.dto.userdto.UserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,17 +25,24 @@ public class FriendshipController {
     	 friendshipService.insertFriend(friendId);
     }
     
-//    //전체 친구목록 조회
-//    @GetMapping("/user/friend")
-//    public ResponseEntity<List<FriendshipDto>> getAllFriendship() {
-//    	return ResponseEntity.ok().body(friendshipService.getFriendships());
-//    }
-    
+    //전체 친구목록 조회
+    @GetMapping("/user/friend")
+    public ResponseEntity<List<FriendDto>> getAllFriendship() {
+    	return ResponseEntity.ok().body(friendshipService.getFriendships());
+    }
 
-    // 친구검색 - 오류
+
+    // 친구 검색 - 친구목록
     @GetMapping("/user/friend/{friendName}")
-    public ResponseEntity<List<FriendshipDto>> searchFriend(@PathVariable String friendName) {
+    public ResponseEntity<List<FriendDto>> searchFriend(@PathVariable String friendName) {
         return ResponseEntity.ok().body(friendshipService.searchFriend(friendName));
+    }
+
+
+    // 친구 검색 - 친구 추가용
+    @GetMapping("/user/friendship/{friendName}")
+    public ResponseEntity<List<FriendshipDto>> searchNewFriend(@PathVariable String friendName) {
+        return ResponseEntity.ok().body(friendshipService.searchNewFriend(friendName));
     }
     
     // 친구정보 조회 (친구 마이페이지 접속 시)

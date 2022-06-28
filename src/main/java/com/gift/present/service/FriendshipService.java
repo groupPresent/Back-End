@@ -4,6 +4,7 @@ package com.gift.present.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gift.present.dto.friendshipdto.FriendDto;
 import com.gift.present.dto.fundingdto.FundingResponseDto;
 import com.gift.present.dto.userdto.UserDto;
 import com.gift.present.model.User;
@@ -15,6 +16,7 @@ import com.gift.present.model.Friendship;
 import com.gift.present.repository.FriendshipRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -41,7 +43,7 @@ public class FriendshipService {
 
 	//친구 추가
 	public void insertFriend(Long friendId) {
-		User user = userRepository.findById(friendId).orElseThrow(
+		User user = userRepository.findById(1L).orElseThrow(
 				() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
 		);
 
@@ -51,33 +53,44 @@ public class FriendshipService {
 
 
 	//친구 목록 조회
-//	public List<FriendshipDto> getFriendships() {
-//		List<FriendshipDto> friendshipDtoList = new ArrayList<>();
-//        List<Friendship> friendshipList = friendshipRepository.findAllByUser_Id(1L);
-//
-//        for(Friendship friendship : friendshipList) {
-//            friendshipDtoList.add(generateFriendshipDto(friendship));
-//        }
-//
-//        return friendshipDtoList;
-//	}
+	public List<FriendDto> getFriendships() {
+		List<FriendDto> friendDtoList = new ArrayList<>();
+        List<Friendship> friendshipList = friendshipRepository.findAllByUser_Id(1L);
+
+        for(Friendship friendship : friendshipList) {
+			friendDtoList.add(generateFriendDto(friendship));
+        }
+
+        return friendDtoList;
+	}
 	
 	
 
 	// 친구 검색 - 친구목록
-	public List<FriendshipDto> searchFriend(String friendName) {
+	public List<FriendDto> searchFriend(String friendName) {
+		List<FriendDto> friendDtoList = new ArrayList<>();
+
+		List<User> friendList = userRepository.findAllByUserNameIsContaining(friendName);
+
+		for(User friend : friendList) {
+			Friendship friendship = friendshipRepository.findByUser_IdAndFriendId(1L, friend.getId());
+			friendDtoList.add(generateFriendDto(friendship));
+		}
+
+		return friendDtoList;
+	}
+
+	// 친구 검색 - 친구 추가용
+	public List<FriendshipDto> searchNewFriend(String friendName) {
 		List<FriendshipDto> friendshipDtoList = new ArrayList<>();
 
-		List<User> userList = userRepository.findAllByUserName(friendName);
+		List<User> userList = userRepository.findAllByUserNameIsContaining(friendName);
 
 		for(User user : userList) {
 			friendshipDtoList.add(generateFriendshipDto(user));
 		}
 		return friendshipDtoList;
 	}
-
-	// 친구 검색 - 친구 추가용
-//	public List<>
 
 
 
@@ -107,6 +120,18 @@ public class FriendshipService {
 		
 //	}
 
+	// generateFriendDto 생성하기 메소드
+	private FriendDto generateFriendDto(Friendship friendship) {
+		User user = userRepository.findById(friendship.getFriendId()).orElseThrow(
+				() -> new IllegalArgumentException("해당하는 유저가 없습니다")
+		);
+		System.out.println(friendship.getFriendId());
+		return FriendDto.builder()
+				.friendId(friendship.getFriendId())
+				.friendName(user.getUserName())
+				.photoUrl(user.getProfileImg())
+				.build();
+	}
 
 	// generateFriendshipDto 생성하기 메소드
 	private FriendshipDto generateFriendshipDto(User user) {
