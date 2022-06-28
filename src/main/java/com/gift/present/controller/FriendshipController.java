@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class FriendshipController {
     private final FriendshipService friendshipService;
 
+
     //친구추가
     @PostMapping("/user/friend/{friendId}")
     public void insertFriend(@PathVariable Long friendId) {

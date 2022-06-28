@@ -46,9 +46,12 @@ public class UserService {
     }
 
 
+
 //    public UserDto getUser(Long id) {
 //        //주석 처리된 코드가 원래코드 현재는 친구유저가 생성이 안되어 있기 때문에 주석처리하고 내정보호출
 //        User user = userRepository.findById(id).orElseThrow(
+
+
 //                () -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
 //        );
 //        //1번유저정보호출(최초에 가상유저생성한것)
