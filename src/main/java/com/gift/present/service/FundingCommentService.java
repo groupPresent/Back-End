@@ -5,13 +5,11 @@ import com.gift.present.model.FundingComment;
 import com.gift.present.repository.FundingCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
-
 public class FundingCommentService {
     private final FundingCommentRepository fundingCommentRepository;
 
@@ -35,6 +33,8 @@ public class FundingCommentService {
         fundingCommentRepository.save(fundingcomment);
     }
 
+    // 댓글 수정
+    @Transactional
     public void editComment(CommentDto commentDto, Long commentId) {
         FundingComment fundingComment = fundingCommentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("수정할 댓글이 존재하지 않습니다!")
@@ -43,6 +43,7 @@ public class FundingCommentService {
     }
 
     //댓글 삭제
+    @Transactional
     public void deleteComment(Long commentId) {
         fundingCommentRepository.deleteById(commentId);
     }

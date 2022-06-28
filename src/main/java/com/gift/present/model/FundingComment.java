@@ -40,9 +40,8 @@ public class FundingComment extends Timestamped {
     }
 
     public void update(CommentDto commentDto) {
-        this.commentID = commentID;
-        this.author = author;
-        this.content = content;
+        this.author = commentDto.getAuthor();
+        this.content = commentDto.getContent();
 
 
 
