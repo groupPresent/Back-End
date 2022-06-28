@@ -1,5 +1,6 @@
 package com.gift.present.model;
 
+import com.gift.present.dto.qnAdto.CommentDto;
 import com.gift.present.time.Timestamped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class FundingComment extends Timestamped {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = true)
     private Funding funding;
 
     @Column
@@ -25,4 +26,24 @@ public class FundingComment extends Timestamped {
 
     @Column
     private String content;
+
+    @Column
+    private Long fundingID;
+
+    @Column
+    private Long commentID;
+
+    public FundingComment(String author, String content, Long fundingID) {
+        this.author = author;
+        this.fundingID = fundingID;
+        this.content = content;
+    }
+
+    public void update(CommentDto commentDto) {
+        this.author = commentDto.getAuthor();
+        this.content = commentDto.getContent();
+
+
+
+    }
 }

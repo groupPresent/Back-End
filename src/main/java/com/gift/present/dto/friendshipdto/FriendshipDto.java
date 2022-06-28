@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FriendshipDto {
     private Long friendId;
-    private boolean favorites;
     private String friendName;
     private String photoUrl;
 }
