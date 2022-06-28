@@ -1,8 +1,10 @@
 package com.gift.present.service;
 
 import com.gift.present.dto.qnAdto.CommentDto;
+import com.gift.present.model.Funding;
 import com.gift.present.model.FundingComment;
 import com.gift.present.repository.FundingCommentRepository;
+import com.gift.present.repository.FundingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FundingCommentService {
     private final FundingCommentRepository fundingCommentRepository;
+    private final FundingRepository fundingRepository;
 
     public CommentDto getComment(Long fundingId) {
         FundingComment comment = fundingCommentRepository.findById(fundingId).orElseThrow(
@@ -29,7 +32,10 @@ public class FundingCommentService {
     //댓글 작성
     @Transactional
     public void WriteComment(Long fundingId, CommentDto commentDto) {
-        FundingComment fundingcomment =  new FundingComment(commentDto.getAuthor(), commentDto.getContent(), fundingId);
+        Funding funding = fundingRepository.findById(fundingId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 펀딩이 존재하지 않습니다.")
+        );
+        FundingComment fundingcomment =  new FundingComment(funding, commentDto.getAuthor(), commentDto.getContent());
         fundingCommentRepository.save(fundingcomment);
     }
 

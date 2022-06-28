@@ -26,13 +26,13 @@ public class CommentController {
     }
 
     // 댓글 수정
-    @PutMapping("/user/funding/{fundingId}/comment/{commentId}")
+    @PutMapping("/user/funding/comment/{commentId}")
     public void editComment(@RequestBody CommentDto commentDto, @PathVariable Long commentId){
         fundingcommentService.editComment(commentDto, commentId);
     }
 
     //댓글 삭제
-    @DeleteMapping("/user/funding/{fundingId}/comment/{commentId}")
+    @DeleteMapping("/user/funding/comment/{commentId}")
     public void deleteComment(@PathVariable Long commentId) {
         fundingcommentService.deleteComment(commentId);
     }
