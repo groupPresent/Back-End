@@ -18,7 +18,7 @@ public class FundingComment extends Timestamped {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = true)
+    @JoinColumn(nullable = false)
     private Funding funding;
 
     @Column
@@ -27,16 +27,15 @@ public class FundingComment extends Timestamped {
     @Column
     private String content;
 
-    @Column
-    private Long fundingID;
+    //@Column
+    //private Long fundingID;
 
-    @Column
-    private Long commentID;
 
-    public FundingComment(String author, String content, Long fundingID) {
+    public FundingComment(Funding funding, String author, String content){ //, Long fundingID) {
+        this.funding = funding;
         this.author = author;
-        this.fundingID = fundingID;
         this.content = content;
+
     }
 
     public void update(CommentDto commentDto) {
