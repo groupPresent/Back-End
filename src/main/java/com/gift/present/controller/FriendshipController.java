@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.gift.present.dto.friendshipdto.FriendDto;
 import com.gift.present.dto.fundingdto.FundingResponseDto;
+import com.gift.present.dto.userdto.UserDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

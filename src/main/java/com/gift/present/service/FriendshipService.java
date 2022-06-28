@@ -103,7 +103,9 @@ public class FriendshipService {
 
 	//친구 마이페이지 - 친구정보 조회
 	public UserDto getFriendInfo(Long friendId) {
-		User friend = userRepository.findByid(friendId);
+		User friend = userRepository.findById(friendId).orElseThrow(
+				() -> new IllegalArgumentException("해당하는 유저가 없습니다")
+		);
 		return generateFriendUserDto(friend);
 	}
 
@@ -127,7 +129,9 @@ public class FriendshipService {
 
 	//친구 즐겨찾기 등록/취소
 	public void updateFriendFavorite(Long friendId) {
-		User user = userRepository.findByid(1L);
+		User user = userRepository.findById(1L).orElseThrow(
+				() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+		);
 	    List<Friendship> friendshipList = friendshipRepository.findAllByUser_IdAndFriendId(user.getId(),friendId);
 		for(Friendship friendship : friendshipList){
 			friendship.setFavorites(!friendship.getFavorites());
