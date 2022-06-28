@@ -39,10 +39,10 @@ public class FriendshipController {
     }
     
     // 친구정보 조회 (친구 마이페이지 접속 시)
-//    @GetMapping("/user/friend/{friendId}/info")
-//    public ResponseEntity<UserDto> getFriendInfo(@PathVariable Long friendId) {
-//        return ResponseEntity.ok().body(friendshipService.getFriendInfo(friendId));
-//    }
+    @GetMapping("/user/friend/{friendId}/info")
+    public ResponseEntity<UserDto> getFriendInfo(@PathVariable Long friendId) {
+        return ResponseEntity.ok().body(friendshipService.getFriendInfo(friendId));
+    }
 
     // 친구 펀딩정보 조회 (친구 마이페이지 접속 시)
     @GetMapping("/user/frined/{friendId}/funding")
@@ -50,9 +50,9 @@ public class FriendshipController {
         return ResponseEntity.ok().body(friendshipService.searchFriendFundingInfo(friendId));
     }
     
-//    // 친구 즐겨찾기 등록/취소
-//    @PutMapping("/user/friend/{friendId}/favorite")
-//    public void updateFriendFavorite(@PathVariable Long friendId) {
-//    	friendshipService.updateFriendFavorite(friendId);
-//    }
+    // 친구 즐겨찾기 등록/취소
+    @PutMapping("/user/friend/{friendId}/favorite")
+    public void updateFriendFavorite(@PathVariable Long friendId) {
+    	friendshipService.updateFriendFavorite(friendId);
+    }
 }
