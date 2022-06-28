@@ -24,4 +24,10 @@ public class Fundraising {
 
     @Column
     private int money;
+
+    public Fundraising(Funding funding, Long contributorId, int money) {
+        this.funding = funding;
+        this.contributorId = contributorId;
+        this.money = money;
+    }
 }

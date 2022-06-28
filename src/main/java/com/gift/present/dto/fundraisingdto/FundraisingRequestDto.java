@@ -1,5 +1,4 @@
-package com.gift.present.dto.qnAdto;
-
+package com.gift.present.dto.fundraisingdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QnADto {
-    private String question;
-    private int viewCnt;
+public class FundraisingRequestDto {
+    private int donation;
 }
