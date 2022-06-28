@@ -54,7 +54,7 @@ public class FriendshipController {
     }
 
     // 친구 펀딩정보 조회 (친구 마이페이지 접속 시)
-    @GetMapping("/user/frined/{friendId}/funding")
+    @GetMapping("/user/friend/{friendId}/funding")
     public ResponseEntity<List<FundingResponseDto>> searchFriendFundingInfo(@PathVariable Long friendId) {
         return ResponseEntity.ok().body(friendshipService.searchFriendFundingInfo(friendId));
     }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @AllArgsConstructor
@@ -14,7 +16,7 @@ public class CommentController {
     public final FundingCommentService fundingcommentService;
     // 댓글 조회
     @GetMapping("/user/funding/{fundingId}/fundingComment")
-    public ResponseEntity<CommentDto> getComment(@PathVariable Long fundingId){
+    public ResponseEntity<List<CommentDto>> getComment(@PathVariable Long fundingId){
         return ResponseEntity.ok().body(fundingcommentService.getComment(fundingId));
     }
 

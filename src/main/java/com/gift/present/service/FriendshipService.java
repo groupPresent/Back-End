@@ -3,6 +3,7 @@ package com.gift.present.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.gift.present.dto.friendshipdto.FriendDto;
 import com.gift.present.dto.fundingdto.FundingResponseDto;
@@ -80,8 +81,11 @@ public class FriendshipService {
 		List<User> friendList = userRepository.findAllByUserNameIsContaining(friendName);
 
 		for(User friend : friendList) {
-			Friendship friendship = friendshipRepository.findByUser_IdAndFriendId(1L, friend.getId());
-			friendDtoList.add(generateFriendDto(friendship));
+			Optional<Friendship> friendship = friendshipRepository.findByUser_IdAndFriendId(1L, friend.getId());
+			if(friendship.isPresent()) {
+				friendDtoList.add(generateFriendDto(friendship.get()));
+			}
+
 		}
 
 		return friendDtoList;
@@ -103,8 +107,11 @@ public class FriendshipService {
 
 	//친구 마이페이지 - 친구정보 조회
 	public UserDto getFriendInfo(Long friendId) {
-		User friend = userRepository.findById(friendId).orElseThrow(
-				() -> new IllegalArgumentException("해당하는 유저가 없습니다")
+		Friendship friendship = friendshipRepository.findByUser_IdAndFriendId(1L, friendId).orElseThrow(
+				() -> new IllegalArgumentException("해당 유저는 친구가 아닙니다.")
+		);
+		User friend = userRepository.findById(friendship.getFriendId()).orElseThrow(
+				() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
 		);
 		return generateFriendUserDto(friend);
 	}
@@ -128,17 +135,15 @@ public class FriendshipService {
 
 
 	//친구 즐겨찾기 등록/취소
+	@Transactional
 	public void updateFriendFavorite(Long friendId) {
 		User user = userRepository.findById(1L).orElseThrow(
-				() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+				() -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
 		);
-	    List<Friendship> friendshipList = friendshipRepository.findAllByUser_IdAndFriendId(user.getId(),friendId);
-		for(Friendship friendship : friendshipList){
-			friendship.setFavorites(!friendship.getFavorites());
-			friendshipRepository.save(friendship);
-			break;
-		}
-		
+	    Friendship friendship = friendshipRepository.findByUser_IdAndFriendId(user.getId(),friendId).orElseThrow(
+				() -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
+		);
+		friendship.setFavorites(!friendship.getFavorites());
 	}
 
 	// generateFriendDto 생성하기 메소드
@@ -146,7 +151,6 @@ public class FriendshipService {
 		User user = userRepository.findById(friendship.getFriendId()).orElseThrow(
 				() -> new IllegalArgumentException("해당하는 유저가 없습니다")
 		);
-		System.out.println(friendship.getFriendId());
 		return FriendDto.builder()
 				.friendId(friendship.getFriendId())
 				.friendName(user.getUserName())

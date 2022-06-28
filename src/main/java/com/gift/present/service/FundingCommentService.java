@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -16,11 +19,14 @@ public class FundingCommentService {
     private final FundingCommentRepository fundingCommentRepository;
     private final FundingRepository fundingRepository;
 
-    public CommentDto getComment(Long fundingId) {
-        FundingComment comment = fundingCommentRepository.findById(fundingId).orElseThrow(
-                () -> new IllegalStateException("아직 댓글이 달리지 않았습니다!")
-        );
-        return generateCommentDto(comment);
+    // 댓글 조회
+    public List<CommentDto> getComment(Long fundingId) {
+        List<CommentDto> commentDtoList = new ArrayList<>();
+        List<FundingComment> commentList = fundingCommentRepository.findAllByFunding_Id(fundingId);
+        for(FundingComment fundingComment : commentList) {
+            commentDtoList.add(generateCommentDto(fundingComment));
+        }
+        return commentDtoList;
     }
 
     private CommentDto generateCommentDto(FundingComment comment) {
@@ -29,6 +35,7 @@ public class FundingCommentService {
                 .content(comment.getContent())
                 .build();
     }
+
     //댓글 작성
     @Transactional
     public void WriteComment(Long fundingId, CommentDto commentDto) {

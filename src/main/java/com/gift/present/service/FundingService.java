@@ -1,17 +1,12 @@
 package com.gift.present.service;
 
+import com.gift.present.dto.fundingcommentdto.FundingCommentResponseDto;
 import com.gift.present.dto.fundingdto.ContributorDto;
 import com.gift.present.dto.fundingdto.FundingDetailResponseDto;
 import com.gift.present.dto.fundingdto.FundingRequestDto;
 import com.gift.present.dto.fundingdto.FundingResponseDto;
-import com.gift.present.model.Anniversary;
-import com.gift.present.model.Funding;
-import com.gift.present.model.Fundraising;
-import com.gift.present.model.User;
-import com.gift.present.repository.AnniversaryRepository;
-import com.gift.present.repository.FundingRepository;
-import com.gift.present.repository.FundraisingRepository;
-import com.gift.present.repository.UserRepository;
+import com.gift.present.model.*;
+import com.gift.present.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +21,7 @@ public class FundingService {
     private final FundingRepository fundingRepository;
     private final AnniversaryRepository anniversaryRepository;
     private final FundraisingRepository fundraisingRepository;
+    private final FundingCommentRepository fundingCommentRepository;
     private final UserRepository userRepository;
 
     // 펀딩세부페이지 - 조회
@@ -35,7 +31,9 @@ public class FundingService {
                 () -> new IllegalArgumentException("해당 펀딩이 존재하지 않습니다.")
         );
         List<Fundraising> fundraisingList = fundraisingRepository.findAllByFunding_Id(fundingId);
-        return generateFundingDetailResponseDto(funding, fundraisingList);
+        List<FundingComment> fundingCommentList = fundingCommentRepository.findAllByFunding_Id(fundingId);
+
+        return generateFundingDetailResponseDto(funding, fundraisingList, fundingCommentList);
     }
 
     // 펀딩받고싶은선물페이지 - 작성
@@ -71,23 +69,17 @@ public class FundingService {
         return fundingResponseDtoList;
     }
 
-    public List<FundingResponseDto> getUserFundingList(Long friendId) {
-        List<FundingResponseDto> userFundingDtoList = new ArrayList<>();
-        List<Funding> userFundingList = fundingRepository.findAllByUserId(friendId);
-        for(Funding userFunding : userFundingList) {
-            List<Fundraising> fundraisingList = fundraisingRepository.findAllByFunding_Id(userFunding.getId());
-            int giftFundingPrice = 0;
-            for(Fundraising fundraising : fundraisingList) {
-                giftFundingPrice += fundraising.getMoney();
-            }
-            userFundingDtoList.add(generateFundingResponseDto(userFunding, giftFundingPrice));
-        }
-        return userFundingDtoList;
+
+
+    public FundingCommentResponseDto generateFundingCommentResponseDto(FundingComment fundingComment) {
+        return FundingCommentResponseDto.builder()
+                .commenter(fundingComment.getAuthor())
+                .content(fundingComment.getContent())
+                .build();
     }
 
-
     // 펀딩 세부페이지 Dto 생성 메소드
-    public FundingDetailResponseDto generateFundingDetailResponseDto(Funding funding, List<Fundraising> fundraisingList) {
+    public FundingDetailResponseDto generateFundingDetailResponseDto(Funding funding, List<Fundraising> fundraisingList, List<FundingComment> fundingCommentList) {
         int moneys = 0;
         List<ContributorDto> contributorList = new ArrayList<>();
         for(Fundraising fundraising : fundraisingList) {
@@ -98,6 +90,12 @@ public class FundingService {
             ).getUserName();
             contributorList.add(generateContributorDto(contributorName));
         }
+
+        List<FundingCommentResponseDto> fundingCommentResponseDtoList = new ArrayList<>();
+        for(FundingComment fundingComment : fundingCommentList) {
+            fundingCommentResponseDtoList.add(generateFundingCommentResponseDto(fundingComment));
+        }
+
         return FundingDetailResponseDto.builder()
                 .giftName(funding.getGiftName())
                 .giftPhoto(funding.getGiftPhoto())
@@ -106,8 +104,8 @@ public class FundingService {
                 .giftFundingPrice(funding.getGiftPrice())
                 .contributorList(contributorList)
                 .contributorNum(contributorList.size())
-//                .commentList()
-//                .commentNum(5)
+                .commentList(fundingCommentResponseDtoList)
+                .commentNum(fundingCommentList.size())
                 .build();
     }
 
