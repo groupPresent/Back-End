@@ -20,6 +20,9 @@ public class User {
     private String userName;
 
     @Column
+    private String name;
+
+    @Column
     private String profileImg;
 
     @Column
@@ -34,8 +37,9 @@ public class User {
     @Column
     private String gender;
 
-    public User(String userName, String profileImg, String birthDay, String password, String accountNum, String gender) {
+    public User(String userName, String name, String profileImg, String birthDay, String password, String accountNum, String gender) {
         this.userName = userName;
+        this.name = name;
         this.profileImg = profileImg;
         this.birthDay = birthDay;
         this.password = password;

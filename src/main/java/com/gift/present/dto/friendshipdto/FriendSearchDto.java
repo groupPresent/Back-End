@@ -1,4 +1,4 @@
-package com.gift.present.dto.fundingdto;
+package com.gift.present.dto.friendshipdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FundingRequestDto {
-    private String giftName;
-    private int giftPrice;
-    private String anniversaryName;
+public class FriendSearchDto {
+    private String friendName;
 }
