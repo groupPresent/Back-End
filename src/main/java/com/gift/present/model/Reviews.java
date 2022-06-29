@@ -34,13 +34,17 @@ public class Reviews extends Timestamped {
     @JoinColumn
     private User user;
 
-    public Reviews(String reviewTitle, String reviewContent, int reviewStar, String reviewPhoto, int reviewPrice) {
+    @Column
+    private Long fundingId;
+
+    public Reviews(String reviewTitle, String reviewContent, int reviewStar, String reviewPhoto, int reviewPrice, User user, Long fundingId) {
         this.reviewTitle = reviewTitle;
         this.reviewContent = reviewContent;
         this.reviewStar = reviewStar;
         this.reviewPhoto = reviewPhoto;
         this.reviewPrice = reviewPrice;
-
+        this.user = user;
+        this.fundingId = fundingId;
     }
 
 

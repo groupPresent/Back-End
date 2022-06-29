@@ -38,26 +38,31 @@ public class FundingService {
 
     // 펀딩받고싶은선물페이지 - 작성
     @Transactional
-    public void createFunding(MultipartFile giftPhoto, FundingRequestDto fundingRequestDto) {
-        Anniversary anniversary = anniversaryRepository.findByAnniversaryDateAndUser_Id(fundingRequestDto.getDate(), 1L);
-        Funding funding = new Funding(1L, fundingRequestDto.getGiftName(), "giftPhotoUrl", fundingRequestDto.getGiftPrice(), anniversary);
+    public void createFunding(MultipartFile giftPhoto, FundingRequestDto fundingRequestDto, User user) {
+        Long userId = user.getId();
+        Anniversary anniversary = anniversaryRepository.findByAnniversaryNameAndUser_Id(fundingRequestDto.getAnniversaryName(), userId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 기념일이 존재하지 않습니다.")
+        );
+        Funding funding = new Funding(userId, fundingRequestDto.getGiftName(), "giftPhotoUrl", fundingRequestDto.getGiftPrice(), anniversary);
         fundingRepository.save(funding);
     }
 
-    // 펀딩받고싶은선물페이지 - 수정
-    @Transactional
-    public void editFunding(MultipartFile giftPhoto, FundingRequestDto fundingRequestDto, Long fundingId) {
-        Anniversary anniversary = anniversaryRepository.findByAnniversaryDateAndUser_Id(fundingRequestDto.getDate(), 1L);
-        Funding funding = fundingRepository.findById(fundingId).orElseThrow(
-                () -> new IllegalArgumentException("해당 펀딩이 존재하지 않습니다.")
-        );
-        funding.update(fundingRequestDto, anniversary);
-    }
+//    // 펀딩받고싶은선물페이지 - 수정
+//    @Transactional
+//    public void editFunding(MultipartFile giftPhoto, FundingRequestDto fundingRequestDto, Long fundingId, User user) {
+//        Anniversary anniversary = anniversaryRepository.findByAnniversaryNameAndUser_Id(fundingRequestDto.getAnniversaryName(), user.getId()).orElseThrow(
+//                () -> new IllegalArgumentException("해당하는 기념일이 존재하지 않습니다.")
+//        );
+//        Funding funding = fundingRepository.findById(fundingId).orElseThrow(
+//                () -> new IllegalArgumentException("해당 펀딩이 존재하지 않습니다.")
+//        );
+//        funding.update(fundingRequestDto, anniversary);
+//    }
 
     // 받은펀딩 목록 조회 메소드
-    public List<FundingResponseDto> getAllFundingList() {
+    public List<FundingResponseDto> getAllFundingList(User user) {
         List<FundingResponseDto> fundingResponseDtoList = new ArrayList<>();
-        List<Funding> fundingList = fundingRepository.findAllByUserId(1L);
+        List<Funding> fundingList = fundingRepository.findAllByUserId(user.getId());
         for(Funding funding : fundingList) {
             List<Fundraising> fundraisingList = fundraisingRepository.findAllByFunding_Id(funding.getId());
             int giftFundingPrice = 0;
@@ -84,7 +89,6 @@ public class FundingService {
         List<ContributorDto> contributorList = new ArrayList<>();
         for(Fundraising fundraising : fundraisingList) {
             moneys += fundraising.getMoney();
-            System.out.println(fundraising.getMoney());
             String contributorName = userRepository.findById(fundraising.getContributorId()).orElseThrow(
                     () -> new IllegalArgumentException("해당하는 유저가 없습니다")
             ).getUserName();

@@ -2,8 +2,11 @@ package com.gift.present.controller;
 
 
 import com.gift.present.dto.anniversarydto.AnniversaryRequestDto;
+import com.gift.present.model.User;
+import com.gift.present.security.UserDetailsImpl;
 import com.gift.present.service.AnniversaryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,22 +16,25 @@ public class AnniversaryController {
 
     // 기념일 등록
     @PostMapping("/user/anniversary")
-    public void createAnniversary(@RequestBody AnniversaryRequestDto anniversaryRequestDto) {
-        // User
-        anniversaryService.createAnniversary(anniversaryRequestDto);
+    public void createAnniversary(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody AnniversaryRequestDto anniversaryRequestDto) {
+        User user = userDetails.getUser();
+        anniversaryService.createAnniversary(anniversaryRequestDto, user);
     }
 
     // 기념일 수정
     @PutMapping("/user/anniversary/{anniversaryId}")
-    public void editAnniversary(@RequestBody AnniversaryRequestDto anniversaryRequestDto, @PathVariable Long anniversaryId) {
-        // User
-        anniversaryService.editAnniversary(anniversaryRequestDto, anniversaryId);
+    public void editAnniversary(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                @RequestBody AnniversaryRequestDto anniversaryRequestDto,
+                                @PathVariable Long anniversaryId)
+    {
+        User user = userDetails.getUser();
+        anniversaryService.editAnniversary(anniversaryRequestDto, anniversaryId, user);
     }
 
     // 기념일 삭제
     @DeleteMapping("/user/anniversary/{anniversaryId}")
-    public void deleteAnniversary(@PathVariable Long anniversaryId) {
-        // User
-        anniversaryService.deleteAnniversary(anniversaryId);
+    public void deleteAnniversary(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long anniversaryId) {
+        User user = userDetails.getUser();
+        anniversaryService.deleteAnniversary(anniversaryId, user);
     }
 }

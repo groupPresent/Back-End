@@ -1,17 +1,16 @@
 package com.gift.present.service;
 
 import com.gift.present.dto.anniversarydto.AnniversaryInfoDto;
-import com.gift.present.dto.userdto.UserDto;
 import com.gift.present.dto.userdto.UserInfoResponseDto;
+import com.gift.present.dto.userdto.UserRequestDto;
 import com.gift.present.model.Anniversary;
 import com.gift.present.model.User;
-import com.gift.present.repository.AnniversaryRepository;
-import com.gift.present.repository.FundingRepository;
-import com.gift.present.repository.FundraisingRepository;
-import com.gift.present.repository.UserRepository;
+import com.gift.present.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,58 +18,52 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
     private final AnniversaryRepository anniversaryRepository;
     private final FundingRepository fundingRepository;
     private final FundraisingRepository fundraisingRepository;
+    private final FundingCommentRepository fundingCommentRepository;
 
-    // 임시유저생성
-    public void createUser() {
-        User user = new User("beomin", "NOIMG", "6/8", "1234", "123-123-123", "남");
-        User user2 = new User("mirim", "NOIMG", "5/4", "12345", "123-123", "여");
+
+    // 임시 회원가입
+    @Transactional
+    public void createUser(UserRequestDto userRequestDto, MultipartFile profileImg) {
+        String enPassword = bCryptPasswordEncoder.encode(userRequestDto.getPassword());
+        User user = new User(userRequestDto.getUserName(),
+                userRequestDto.getName(),
+                "NOIMG",
+                userRequestDto.getBirthDay(),
+                enPassword,
+                userRequestDto.getAccountNum(),
+                userRequestDto.getGender()
+        );
         userRepository.save(user);
-        userRepository.save(user2);
     }
 
     // 내정보 조회
-    public UserInfoResponseDto getMyInfo() {
+    public UserInfoResponseDto getMyInfo(User user) {
+        Long userId = user.getId();
         List<AnniversaryInfoDto> anniversaryInfoDtoList = new ArrayList<>();
-        User user = userRepository.findById(1L).orElseThrow(
+        userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
         );
-        List<Anniversary> anniversaryList = anniversaryRepository.findAllByUser_Id(user.getId());
+        List<Anniversary> anniversaryList = anniversaryRepository.findAllByUser_Id(userId);
         for(Anniversary anniversary : anniversaryList) {
             anniversaryInfoDtoList.add(generateAnniversaryInfoDto(anniversary));
         }
         return generateUserInfoResponseDto(user, anniversaryInfoDtoList);
     }
 
-
-
-//    public UserDto getUser(Long id) {
-//        //주석 처리된 코드가 원래코드 현재는 친구유저가 생성이 안되어 있기 때문에 주석처리하고 내정보호출
-//        User user = userRepository.findById(id).orElseThrow(
-
-
-//                () -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
-//        );
-//        //1번유저정보호출(최초에 가상유저생성한것)
-////        User user = userRepository.findById(1L).orElseThrow(
-////                () -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
-////        );
-//        return generateUserDto(user);
-//    }
-
-//    public List<UserDto> searchUserByName(String userName){
-//        return userRepository.findAllByUserName(userName);
-//    }
-
-
-
     // 유저 탈퇴하기
     @Transactional
-    public void deleteUser() {
-        userRepository.deleteById(1L);
+    public void deleteUser(User user) {
+        Long userId = user.getId();
+        fundingCommentRepository.deleteAllByAuthor(user.getName());
+        fundraisingRepository.deleteAllByContributorId(userId);
+        fundingRepository.deleteAllByUserId(userId);
+        anniversaryRepository.deleteAllByUserId(userId);
+        userRepository.deleteById(userId);
     }
 
     // UserInfoResponseDto 생성 메소드

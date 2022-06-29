@@ -9,6 +9,7 @@ import com.gift.present.repository.FundingRepository;
 import com.gift.present.repository.FundraisingRepository;
 import com.gift.present.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,22 +26,24 @@ public class FundraisingService {
 
     // 모금하기 메소드
     @Transactional
-    public void createFundraise(Long fundingId, FundraisingRequestDto fundraisingRequestDto) {
-        Funding funding = fundingRepository.findById(fundingId).orElseThrow(
-                () -> new IllegalArgumentException("해당 펀딩이 존재하지 않습니다.")
+    public void createFundraise(Long fundingId, FundraisingRequestDto fundraisingRequestDto, User user) {
+        Long userId = user.getId();
+        Funding funding = fundingRepository.findByIdAndUserIdIsNot(fundingId, userId).orElseThrow(
+                () -> new IllegalArgumentException("해당 펀딩이 존재하지 않거나 자신의 펀딩에는 모금할 수 없습니다.")
         );
-        Fundraising fundraising = new Fundraising(funding, 1L, fundraisingRequestDto.getDonation());
+        Fundraising fundraising = new Fundraising(funding, userId, fundraisingRequestDto.getDonation());
         fundraisingRepository.save(fundraising);
     }
 
     // 내가 준 모금 목록 조회
     @Transactional
-    public List<FundraisingResponseDto> getAllFundraising() {
+    public List<FundraisingResponseDto> getAllFundraising(User user) {
+        Long userId = user.getId();
         List<FundraisingResponseDto> fundraisingResponseDtoList = new ArrayList<>();
-        User user = userRepository.findById(1L).orElseThrow(
+        userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")
         );
-        List<Fundraising> fundraisingList = fundraisingRepository.findAllByContributorId(user.getId());
+        List<Fundraising> fundraisingList = fundraisingRepository.findAllByContributorId(userId);
         for(Fundraising fundraising : fundraisingList) {
             fundraisingResponseDtoList.add(generateFundraisingResponseDto(fundraising));
         }
