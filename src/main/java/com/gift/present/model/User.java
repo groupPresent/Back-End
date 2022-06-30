@@ -46,4 +46,9 @@ public class User {
         this.accountNum = accountNum;
         this.gender = gender;
     }
+
+
+    public void setProfileImg(String imgPath) {
+        this.profileImg = imgPath;
+    }
 }

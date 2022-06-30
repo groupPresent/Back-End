@@ -1,0 +1,11 @@
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIATBV6PBTT2ARNVTSK
+      secretKey: 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
+    s3:
+      bucket: tava-present-bucket
+    region:
+      static : ap-northeast-2
+    stack:
+      auto : false
