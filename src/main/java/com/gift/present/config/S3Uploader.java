@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,7 +33,8 @@ public class S3Uploader {
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
         File uploadFile = convert(multipartFile)
                 .orElseThrow(()-> new IllegalArgumentException("error : MultipartFile -> File convert fail"));
-
+        System.out.println("uploadfile: "+uploadFile);
+        System.out.println("dirName"+dirName);
         return upload(uploadFile, dirName);
     }
 
@@ -43,9 +45,13 @@ public class S3Uploader {
 
     // S3로 파일 업로드하기
     private String upload(File uploadFile, String dirName) {
+///        String fileName =  UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
 
         String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
         String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
+        System.out.println("gg filename: "+fileName);
+        System.out.println("gg uploadFile: "+uploadFile);
+        System.out.println("uploadimgurl : "+uploadImageUrl);
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
@@ -53,7 +59,9 @@ public class S3Uploader {
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
-
+System.out.println("버킷:"+bucket);
+        System.out.println("파일네임:"+fileName);
+        System.out.println("업로드파일:"+uploadFile);
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
 
         return amazonS3Client.getUrl(bucket, fileName).toString();
@@ -62,10 +70,10 @@ public class S3Uploader {
     // 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            Log.info("local File delete success");
+            System.out.println("delete Success");
             return;
         }
-        Log.info("local File delete fail");
+        System.out.println("delete failed");
 
     }
 
@@ -83,7 +91,7 @@ public class S3Uploader {
             }
             return Optional.of(convertFile);
         }
-
+        System.out.println("여길 왜와!!!!!!!!!!!!!!!!!");
         return Optional.empty();
     }
 }
