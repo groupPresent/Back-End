@@ -1,5 +1,6 @@
 package com.gift.present.service;
 
+import com.gift.present.config.S3Uploader;
 import com.gift.present.dto.anniversarydto.AnniversaryInfoDto;
 import com.gift.present.dto.userdto.UserInfoResponseDto;
 import com.gift.present.dto.userdto.UserRequestDto;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,12 @@ public class UserService {
     private final FundraisingRepository fundraisingRepository;
     private final FundingCommentRepository fundingCommentRepository;
 
+    private final S3Uploader s3Uploader;
+
+    private final String profileImgDirName = "profile";
+
+    private final String defaultImg = "https://tave-present.s3.ap-northeast-2.amazonaws.com/static/defalt+user+frofile.png";
+
 
     // 임시 회원가입
     @Transactional
@@ -37,9 +45,29 @@ public class UserService {
                 enPassword,
                 userRequestDto.getAccountNum(),
                 userRequestDto.getGender()
+
         );
+        //프로필 이미지 업로드
+
+
+        if (!profileImg.getOriginalFilename().equals("delete")) {
+            try {
+                String profileImgUrl = s3Uploader.upload(profileImg, profileImgDirName);
+                user.setProfileImg(profileImgUrl);
+            } catch (Exception e) {
+                user.setProfileImg(defaultImg);
+            }
+        } else {
+            user.setProfileImg(defaultImg);
+        }
+
         userRepository.save(user);
+
+
     }
+
+
+
 
     // 내정보 조회
     public UserInfoResponseDto getMyInfo(User user) {
