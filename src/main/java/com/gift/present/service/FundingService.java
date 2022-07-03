@@ -89,10 +89,13 @@ public class FundingService {
         List<ContributorDto> contributorList = new ArrayList<>();
         for(Fundraising fundraising : fundraisingList) {
             moneys += fundraising.getMoney();
-            String contributorName = userRepository.findById(fundraising.getContributorId()).orElseThrow(
+            User contributor = userRepository.findById(fundraising.getContributorId()).orElseThrow(
                     () -> new IllegalArgumentException("해당하는 유저가 없습니다")
-            ).getUserName();
-            contributorList.add(generateContributorDto(contributorName));
+            );
+            Long contributorId = contributor.getId();
+            String contributorName = contributor.getName();
+
+            contributorList.add(generateContributorDto(contributorId, contributorName));
         }
 
         List<FundingCommentResponseDto> fundingCommentResponseDtoList = new ArrayList<>();
@@ -114,8 +117,9 @@ public class FundingService {
     }
 
     // contributorDto 생성 메소드
-    public ContributorDto generateContributorDto(String contributorName) {
+    public ContributorDto generateContributorDto(Long contributorId, String contributorName) {
         return ContributorDto.builder()
+                .id(contributorId)
                 .name(contributorName)
                 .build();
     }
