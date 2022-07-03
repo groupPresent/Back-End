@@ -3,6 +3,7 @@ package com.gift.present.controller;
 import com.gift.present.dto.fundingdto.FundingDetailResponseDto;
 import com.gift.present.dto.fundingdto.FundingRequestDto;
 import com.gift.present.dto.fundingdto.FundingResponseDto;
+import com.gift.present.dto.userdto.UserInfoResponseDto;
 import com.gift.present.model.Funding;
 import com.gift.present.model.User;
 import com.gift.present.security.UserDetailsImpl;
@@ -53,4 +54,6 @@ public class FundingController {
         User user = userDetails.getUser();
         return ResponseEntity.ok().body(fundingService.getAllFundingList(user));
     }
+
+
 }
