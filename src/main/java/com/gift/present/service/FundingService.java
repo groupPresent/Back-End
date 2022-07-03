@@ -1,5 +1,6 @@
 package com.gift.present.service;
 
+import com.gift.present.config.S3Uploader;
 import com.gift.present.dto.fundingcommentdto.FundingCommentResponseDto;
 import com.gift.present.dto.fundingdto.ContributorDto;
 import com.gift.present.dto.fundingdto.FundingDetailResponseDto;
@@ -23,6 +24,10 @@ public class FundingService {
     private final FundraisingRepository fundraisingRepository;
     private final FundingCommentRepository fundingCommentRepository;
     private final UserRepository userRepository;
+    private final S3Uploader s3Uploader;
+    private final String giftImgDirName = "gift";
+
+    private final String defaultImg = "https://tave-present.s3.ap-northeast-2.amazonaws.com/static/defalt+user+frofile.png";
 
     // 펀딩세부페이지 - 조회
     @Transactional
@@ -43,7 +48,19 @@ public class FundingService {
         Anniversary anniversary = anniversaryRepository.findByAnniversaryNameAndUser_Id(fundingRequestDto.getAnniversaryName(), userId).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 기념일이 존재하지 않습니다.")
         );
-        Funding funding = new Funding(userId, fundingRequestDto.getGiftName(), "giftPhotoUrl", fundingRequestDto.getGiftPrice(), anniversary);
+
+        String giftPhotoUrl = null;
+        if (!giftPhoto.getOriginalFilename().equals("delete")) {
+            try {
+                giftPhotoUrl = s3Uploader.upload(giftPhoto, giftImgDirName);
+            } catch (Exception e) {
+                giftPhotoUrl = defaultImg;
+            }
+        } else {
+            giftPhotoUrl = defaultImg;
+        }
+
+        Funding funding = new Funding(userId, fundingRequestDto.getGiftName(), giftPhotoUrl, fundingRequestDto.getGiftPrice(), anniversary);
         fundingRepository.save(funding);
     }
 
