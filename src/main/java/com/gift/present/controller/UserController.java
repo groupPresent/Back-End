@@ -36,4 +36,6 @@ public class UserController {
         User user = userDetails.getUser();
         userService.deleteUser(user);
     }
+
+
 }
