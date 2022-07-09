@@ -31,12 +31,14 @@ public class UserService {
 
     private final String profileImgDirName = "profile";
 
-    private final String defaultImg = "https://tave-present-bucket.s3.ap-northeast-2.amazonaws.com/profile/c2425c13-7963-4682-a59c-dca1db0716f9defaultProfile.png";
+    private final String defaultImg = "https://tave-present-bucket.s3.ap-northeast-2.amazonaws.com/profile/f9df5c71-ab93-47ef-898d-1d1d12362f27defaultProfile.png";
 
 
     // 임시 회원가입
     @Transactional
     public void createUser(UserRequestDto userRequestDto, MultipartFile profileImg) {
+        //프로필 이미지 업로드
+
         String enPassword = bCryptPasswordEncoder.encode(userRequestDto.getPassword());
         User user = new User(userRequestDto.getUserName(),
                 userRequestDto.getName(),
@@ -47,8 +49,6 @@ public class UserService {
                 userRequestDto.getGender()
 
         );
-        //프로필 이미지 업로드
-
 
         if (!profileImg.getOriginalFilename().equals("delete")) {
             try {
