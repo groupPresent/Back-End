@@ -28,7 +28,7 @@ public class FundingService {
     private final S3Uploader s3Uploader;
     private final String giftImgDirName = "gift";
 
-    private final String defaultImg = "https://tave-present.s3.ap-northeast-2.amazonaws.com/static/defalt+user+frofile.png";
+    private final String defaultImg = "https://tave-present-bucket.s3.ap-northeast-2.amazonaws.com/gift/7bcdf74a-7bdb-4d19-be80-fd66f86814e0defaultProduct.png";
 
     // 펀딩세부페이지 - 조회
     @Transactional

@@ -15,7 +15,7 @@ public class GoodsService {
     private final S3Uploader s3Uploader;
     private final String goodsImgDirName = "goods";
 
-    private final String defaultImg = "https://tave-present.s3.ap-northeast-2.amazonaws.com/static/defalt+user+frofile.png";
+    private final String defaultImg = "https://tave-present-bucket.s3.ap-northeast-2.amazonaws.com/goods/57d04b24-1648-4aea-ad16-042b3ee0319adefaultProduct.png";
 
 
     // 추천 상품 등록하기 메소드
