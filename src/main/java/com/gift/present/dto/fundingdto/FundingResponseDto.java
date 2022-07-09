@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FundingResponseDto {
+    private Long fundingId;
     private String giftPhoto;
     private String giftName;
     private int giftPrice;

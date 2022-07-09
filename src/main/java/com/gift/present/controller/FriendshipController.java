@@ -77,10 +77,10 @@ public class FriendshipController {
     }
 
     // 메인 페이지
-//    @GetMapping("/main")
-//    public ResponseEntity<MainDto> getMain(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        User user = userDetails.getUser();
-//        return ResponseEntity.ok().body(friendshipService.getMain(user));
-//    }
+    @GetMapping("/main")
+    public ResponseEntity<MainDto> getMain(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        return ResponseEntity.ok().body(friendshipService.getMain(user));
+    }
 
 }
