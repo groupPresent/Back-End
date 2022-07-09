@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.gift.present.dto.friendshipdto.FriendDto;
 import com.gift.present.dto.friendshipdto.FriendSearchDto;
+import com.gift.present.dto.friendshipdto.MainDto;
 import com.gift.present.dto.fundingdto.FundingResponseDto;
 import com.gift.present.dto.userdto.UserDto;
 import com.gift.present.model.User;
@@ -74,4 +75,12 @@ public class FriendshipController {
         User user = userDetails.getUser();
     	friendshipService.updateFriendFavorite(friendId, user);
     }
+
+    // 메인 페이지
+    @GetMapping("/main")
+    public ResponseEntity<MainDto> getMain(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        return ResponseEntity.ok().body(friendshipService.getMain(user));
+    }
+
 }

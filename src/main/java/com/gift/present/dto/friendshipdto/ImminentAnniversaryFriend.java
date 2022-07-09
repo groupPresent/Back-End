@@ -1,4 +1,4 @@
-package com.gift.present.dto.anniversarydto;
+package com.gift.present.dto.friendshipdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnniversaryInfoDto {
-    private Long id;
-    private String name;
-    private String date;
+public class ImminentAnniversaryFriend {
+    private String friendName;
+    private String friendProfile;
+    private String anniversaryName;
     private String anniversaryRemains;
 }

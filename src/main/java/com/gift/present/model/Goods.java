@@ -21,4 +21,9 @@ public class Goods {
 
     @Column
     private String goodsPhoto;
+
+    public Goods(String goodsName, String goodsPhoto) {
+        this.goodsName = goodsName;
+        this.goodsPhoto = goodsPhoto;
+    }
 }

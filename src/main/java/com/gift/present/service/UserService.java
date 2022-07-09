@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URLDecoder;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,10 +107,14 @@ public class UserService {
 
     // AnniversaryInfoDto 생성 메소드
     public AnniversaryInfoDto generateAnniversaryInfoDto(Anniversary anniversary) {
+        int anniversaryDate = Integer.parseInt(anniversary.getAnniversaryDate().split("/")[2]);
+        int nowDate = LocalDate.now().getDayOfMonth();
+        int anniversaryRemainDate = anniversaryDate - nowDate;
         return AnniversaryInfoDto.builder()
+                .id(anniversary.getId())
                 .name(anniversary.getAnniversaryName())
                 .date(anniversary.getAnniversaryDate())
-                .anniversaryRemains("D-5")
+                .anniversaryRemains("D"+anniversaryRemainDate)
                 .build();
     }
 

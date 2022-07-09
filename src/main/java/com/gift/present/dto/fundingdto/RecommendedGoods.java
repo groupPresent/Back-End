@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContributorDto {
-    private Long id;
-    private String name;
+public class RecommendedGoods {
+    private String goodsPhoto;
+    private String goodsName;
 }

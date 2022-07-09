@@ -1,25 +1,18 @@
 package com.gift.present.service;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.gift.present.dto.friendshipdto.FriendDto;
-import com.gift.present.dto.friendshipdto.FriendSearchDto;
+import com.gift.present.dto.friendshipdto.*;
 import com.gift.present.dto.fundingdto.FundingResponseDto;
+import com.gift.present.dto.fundingdto.RecommendedGoods;
 import com.gift.present.dto.userdto.UserDto;
-import com.gift.present.model.Funding;
-import com.gift.present.model.Fundraising;
-import com.gift.present.model.User;
-import com.gift.present.repository.FundingRepository;
-import com.gift.present.repository.FundraisingRepository;
-import com.gift.present.repository.UserRepository;
+import com.gift.present.model.*;
+import com.gift.present.repository.*;
 import org.springframework.stereotype.Service;
-
-import com.gift.present.dto.friendshipdto.FriendshipDto;
-import com.gift.present.model.Friendship;
-import com.gift.present.repository.FriendshipRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +26,7 @@ public class FriendshipService {
 	private final UserRepository userRepository;
 	private final FundingRepository fundingRepository;
 	private final FundraisingRepository fundraisingRepository;
-
+	private final AnniversaryRepository anniversaryRepository;
 
 
 
@@ -139,6 +132,30 @@ public class FriendshipService {
 		friendship.setFavorites(!friendship.getFavorites());
 	}
 
+	// 메인페이지 조회
+	public MainDto getMain(User user) {
+		List<Friendship> friendshipList = friendshipRepository.findAllByUser_Id(user.getId());
+		List<ImminentAnniversaryFriend> imminentAnniversaryFriendList = new ArrayList<>();
+		List<RecommendedGoods> recommendedGoodsList = new ArrayList<>();
+		for(Friendship friendship : friendshipList) {
+			List<Anniversary> anniversaryList = anniversaryRepository.findAllByUser_Id(friendship.getFriendId());
+			for(Anniversary anniversary : anniversaryList) {
+				String[] anniversaryYearMonthDay = anniversary.getAnniversaryDate().split("/");
+				int anniversaryYear = Integer.parseInt(anniversaryYearMonthDay[0]);
+				int anniversaryMonth = Integer.parseInt(anniversaryYearMonthDay[1]);
+				int anniversaryDay = Integer.parseInt(anniversaryYearMonthDay[2]);
+				if(LocalDate.now().isAfter(LocalDate.of(anniversaryYear, anniversaryMonth, anniversaryDay)) && LocalDate.now().plusDays(10).isBefore(LocalDate.of(anniversaryYear, anniversaryMonth, anniversaryDay))){
+					imminentAnniversaryFriendList.add(generateImminentAnniversaryFriend(friendship, anniversary));
+				}
+			}
+		}
+
+		// 추천 알고리즘 로적 추가하면 됨
+
+		return generateMainDto(imminentAnniversaryFriendList, recommendedGoodsList);
+	}
+
+
 	// generateFriendDto 생성하기 메소드
 	private FriendDto generateFriendDto(Friendship friendship) {
 		User user = userRepository.findById(friendship.getFriendId()).orElseThrow(
@@ -161,13 +178,17 @@ public class FriendshipService {
 	}
 
 	public FundingResponseDto generateFundingResponseDto(Funding funding, int giftFundingPrice) {
+		int anniversaryDate = Integer.parseInt(funding.getAnniversary().getAnniversaryDate().split("/")[2]);
+		int nowDate = LocalDate.now().getDayOfMonth();
+		int anniversaryRemainDate = anniversaryDate - nowDate;
 		return FundingResponseDto.builder()
+				.fundingId(funding.getId())
 				.giftPhoto(funding.getGiftPhoto())
 				.giftName(funding.getGiftName())
 				.giftPrice(funding.getGiftPrice())
 				.giftFundingRate(giftFundingPrice / funding.getGiftPrice() * 100 + "%")
 				.giftFundingPrice(giftFundingPrice)
-				.anniversaryRemains("D-5")
+				.anniversaryRemains("D"+anniversaryRemainDate)
 				.build();
 	}
 
@@ -182,4 +203,39 @@ public class FriendshipService {
 				.gender(friend.getGender())
 				.build();
 	}
+
+	//
+
+	// ImminentAnniversaryFriendList 생성 메소드
+	public ImminentAnniversaryFriend generateImminentAnniversaryFriend(Friendship friendship, Anniversary anniversary) {
+		User friend = userRepository.findById(friendship.getFriendId()).orElseThrow(
+				() -> new IllegalArgumentException("해당하는 유저가 존재하지 않습니다.")
+		);
+		int anniversaryDate = Integer.parseInt(anniversary.getAnniversaryDate().split("/")[2]);
+		int nowDate = LocalDate.now().getDayOfMonth();
+		int anniversaryRemainDate = anniversaryDate - nowDate;
+		return ImminentAnniversaryFriend.builder()
+				.friendName(friend.getName())
+				.friendProfile(friend.getProfileImg())
+				.anniversaryName(anniversary.getAnniversaryName())
+				.anniversaryRemains("D"+anniversaryRemainDate)
+				.build();
+	}
+
+	// RecommendedGoods 생성 메소드
+	public RecommendedGoods generateRecommendedGoods(Goods goods) {
+		return RecommendedGoods.builder()
+				.goodsName(goods.getGoodsName())
+				.goodsPhoto(goods.getGoodsPhoto())
+				.build();
+	}
+
+	// MainDto 생성메소드
+	public MainDto generateMainDto(List<ImminentAnniversaryFriend> imminentAnniversaryFriendList, List<RecommendedGoods> recommendedGoodsList) {
+		return MainDto.builder()
+				.imminentAnniversaryFriendList(imminentAnniversaryFriendList)
+				.recommendedGoods(recommendedGoodsList)
+				.build();
+	}
+
 }

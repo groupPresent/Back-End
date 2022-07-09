@@ -1,4 +1,4 @@
-package com.gift.present.dto.fundingdto;
+package com.gift.present.dto.goodsdto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ContributorDto {
-    private Long id;
-    private String name;
+public class GoodsRequestDto {
+    private String goodsName;
 }

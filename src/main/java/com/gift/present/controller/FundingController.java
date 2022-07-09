@@ -36,17 +36,7 @@ public class FundingController {
         User user = userDetails.getUser();
         fundingService.createFunding(giftPhoto, fundingRequestDto, user);
     }
-
-    // 펀딩받고싶은선물페이지 - 수정
-//    @PutMapping("/user/funding/{fundingId}")
-//    public void editFunding(@AuthenticationPrincipal UserDetailsImpl userDetails,
-//                            @RequestPart(value = "giftPhoto", required = false) MultipartFile giftPhoto,
-//                            @RequestPart(value = "fundingRequestDto", required = false) FundingRequestDto fundingRequestDto,
-//                            @PathVariable Long fundingId)
-//    {
-//        User user = userDetails.getUser();
-//        fundingService.editFunding(giftPhoto, fundingRequestDto, fundingId, user);
-//    }
+    
 
     // 마이페이지 - 받은펀딩 목록조회
     @GetMapping("/user/funding")

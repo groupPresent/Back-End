@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,10 +107,13 @@ public class FundingService {
         List<ContributorDto> contributorList = new ArrayList<>();
         for(Fundraising fundraising : fundraisingList) {
             moneys += fundraising.getMoney();
-            String contributorName = userRepository.findById(fundraising.getContributorId()).orElseThrow(
+            User contributor = userRepository.findById(fundraising.getContributorId()).orElseThrow(
                     () -> new IllegalArgumentException("해당하는 유저가 없습니다")
-            ).getUserName();
-            contributorList.add(generateContributorDto(contributorName));
+            );
+            Long contributorId = contributor.getId();
+            String contributorName = contributor.getName();
+
+            contributorList.add(generateContributorDto(contributorId, contributorName));
         }
 
         List<FundingCommentResponseDto> fundingCommentResponseDtoList = new ArrayList<>();
@@ -131,21 +135,25 @@ public class FundingService {
     }
 
     // contributorDto 생성 메소드
-    public ContributorDto generateContributorDto(String contributorName) {
+    public ContributorDto generateContributorDto(Long contributorId, String contributorName) {
         return ContributorDto.builder()
+                .id(contributorId)
                 .name(contributorName)
                 .build();
     }
 
     // FundingResponseDto 생성 메소드
     public FundingResponseDto generateFundingResponseDto(Funding funding, int giftFundingPrice) {
+        int anniversaryDate = Integer.parseInt(funding.getAnniversary().getAnniversaryDate().split("/")[2]);
+        int nowDate = LocalDate.now().getDayOfMonth();
+        int anniversaryRemainDate = anniversaryDate - nowDate;
         return FundingResponseDto.builder()
                 .giftPhoto(funding.getGiftPhoto())
                 .giftName(funding.getGiftName())
                 .giftPrice(funding.getGiftPrice())
                 .giftFundingRate(giftFundingPrice / funding.getGiftPrice() * 100 + "%")
                 .giftFundingPrice(giftFundingPrice)
-                .anniversaryRemains("D-5")
+                .anniversaryRemains("D"+anniversaryRemainDate)
                 .build();
     }
 
