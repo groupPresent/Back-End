@@ -16,10 +16,10 @@ public class User {
     @Id
     private Long id;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String userName;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @Column
@@ -28,7 +28,7 @@ public class User {
     @Column
     private String birthDay;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column

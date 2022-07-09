@@ -1,25 +1,22 @@
 package com.gift.present.service;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.gift.present.dto.friendshipdto.FriendDto;
 import com.gift.present.dto.friendshipdto.FriendSearchDto;
+import com.gift.present.dto.friendshipdto.MainDto;
 import com.gift.present.dto.fundingdto.FundingResponseDto;
 import com.gift.present.dto.userdto.UserDto;
-import com.gift.present.model.Funding;
-import com.gift.present.model.Fundraising;
-import com.gift.present.model.User;
-import com.gift.present.repository.FundingRepository;
-import com.gift.present.repository.FundraisingRepository;
-import com.gift.present.repository.UserRepository;
+import com.gift.present.model.*;
+import com.gift.present.repository.*;
 import org.springframework.stereotype.Service;
 
 import com.gift.present.dto.friendshipdto.FriendshipDto;
-import com.gift.present.model.Friendship;
-import com.gift.present.repository.FriendshipRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +30,7 @@ public class FriendshipService {
 	private final UserRepository userRepository;
 	private final FundingRepository fundingRepository;
 	private final FundraisingRepository fundraisingRepository;
-
+	private final AnniversaryRepository anniversaryRepository;
 
 
 
@@ -139,6 +136,26 @@ public class FriendshipService {
 		friendship.setFavorites(!friendship.getFavorites());
 	}
 
+	// 메인페이지 조회
+//	public MainDto getMain(User user) {
+//		List<Friendship> friendshipList = friendshipRepository.findAllByUser_Id(user.getId());
+//
+//		for(Friendship friendship : friendshipList) {
+//			List<Anniversary> anniversaryList = anniversaryRepository.findAllByUser_Id(friendship.getFriendId());
+//			for(Anniversary anniversary : anniversaryList) {
+//				String[] anniversaryDay = anniversary.getAnniversaryDate().split("/");
+//				int anniversarDay1 = Integer.parseInt(anniversaryDay[0]);
+//				int anniversarDay2 = Integer.parseInt(anniversaryDay[1]);
+//				int anniversarDay3 = Integer.parseInt(anniversaryDay[2]);
+//				if(LocalDate.now().getDayOfMonth() - LocalDate.of(anniversarDay1, anniversarDay2, anniversarDay3).getDayOfMonth() <= 10){
+//
+//				}
+//			}
+//
+//		}
+//	}
+
+
 	// generateFriendDto 생성하기 메소드
 	private FriendDto generateFriendDto(Friendship friendship) {
 		User user = userRepository.findById(friendship.getFriendId()).orElseThrow(
@@ -161,13 +178,16 @@ public class FriendshipService {
 	}
 
 	public FundingResponseDto generateFundingResponseDto(Funding funding, int giftFundingPrice) {
+		int anniversaryDate = Integer.parseInt(funding.getAnniversary().getAnniversaryDate().split("/")[2]);
+		int nowDate = LocalDate.now().getDayOfMonth();
+		int anniversaryRemainDate = anniversaryDate - nowDate;
 		return FundingResponseDto.builder()
 				.giftPhoto(funding.getGiftPhoto())
 				.giftName(funding.getGiftName())
 				.giftPrice(funding.getGiftPrice())
 				.giftFundingRate(giftFundingPrice / funding.getGiftPrice() * 100 + "%")
 				.giftFundingPrice(giftFundingPrice)
-				.anniversaryRemains("D-5")
+				.anniversaryRemains("D"+anniversaryRemainDate)
 				.build();
 	}
 

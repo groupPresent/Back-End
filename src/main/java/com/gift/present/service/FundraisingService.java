@@ -1,5 +1,6 @@
 package com.gift.present.service;
 
+import com.gift.present.dto.fundingdto.FundingResponseDto;
 import com.gift.present.dto.fundraisingdto.FundraisingRequestDto;
 import com.gift.present.dto.fundraisingdto.FundraisingResponseDto;
 import com.gift.present.model.Funding;
@@ -13,6 +14,7 @@ import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,13 +54,17 @@ public class FundraisingService {
 
     // FundraisingResponseDto 생성 메소드
     public FundraisingResponseDto generateFundraisingResponseDto(Fundraising fundraising) {
+        Funding funding = fundraising.getFunding();
+        int anniversaryDate = Integer.parseInt(funding.getAnniversary().getAnniversaryDate().split("/")[2]);
+        int nowDate = LocalDate.now().getDayOfMonth();
+        int anniversaryRemainDate = anniversaryDate - nowDate;
         return FundraisingResponseDto.builder()
                 .giftPhoto("NoImg")
                 .giftName(fundraising.getFunding().getGiftName())
                 .giftPrice(fundraising.getFunding().getGiftPrice())
                 .giftFundingRate(fundraising.getMoney()/fundraising.getFunding().getGiftPrice()*100 + "%")
                 .giftFundingPrice(fundraising.getMoney())
-                .anniversaryRemains(fundraising.getFunding().getAnniversary().getAnniversaryDate())
+                .anniversaryRemains("D"+anniversaryRemainDate)
                 .build();
     }
 }
