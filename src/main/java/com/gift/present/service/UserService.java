@@ -31,7 +31,7 @@ public class UserService {
 
     private final String profileImgDirName = "profile";
 
-    private final String defaultImg = "https://tave-present.s3.ap-northeast-2.amazonaws.com/static/defalt+user+frofile.png";
+    private final String defaultImg = "https://tave-present-bucket.s3.ap-northeast-2.amazonaws.com/profile/c2425c13-7963-4682-a59c-dca1db0716f9defaultProfile.png";
 
 
     // 임시 회원가입
